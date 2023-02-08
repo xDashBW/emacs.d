@@ -1,6 +1,12 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
-(my-run-with-idle-timer 1 #'ivy-mode)
+(ivy-mode 1)
+(counsel-mode 1)
+
+;;; 添加 recent 文件后端
+(setq ivy-use-virtual-buffers t)
+;;; 查找 virtual 文件时也使用 preview
+(setq counsel-switch-buffer-preview-virtual-buffers nil)
 
 (with-eval-after-load 'counsel
   ;; automatically pick up cygwin cli tools for counsel
@@ -42,9 +48,6 @@
      ("x" counsel-find-file-extern "open externally")
      ("d" delete-file "delete")
      ("r" counsel-find-file-as-root "open as root"))))
-
-;; (setq ivy-use-virtual-buffers t) ; not good experience
-(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
 
 (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 

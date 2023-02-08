@@ -212,7 +212,7 @@ In each rule, 1st item is default directory, 2nd item is the shell command.")
 
   (add-hook 'after-save-hook #'my-save-run-function nil t)
 
-  (my-company-ispell-setup)
+  ;; (my-company-ispell-setup)
 
   (unless (my-buffer-file-temp-p)
     ;;  trim spaces from end of changed line
@@ -316,8 +316,8 @@ In each rule, 1st item is default directory, 2nd item is the shell command.")
 (setq imenu-max-item-length 256)
 
 ;; {{ recentf-mode
-(setq recentf-max-saved-items 2048
-      recentf-exclude '("/tmp/"
+(setq recentf-max-saved-items 4096
+      recentf-exclude '(
                         ;; "/ssh:"
                         "/sudo:"
                         "recentf$"

@@ -9,6 +9,8 @@
   (when (version< emacs-version minver)
     (error "Emacs v%s or higher is required" minver)))
 
+(setq my-disable-wucuo t)
+(setq my-disable-lazyflymake t)
 (setq user-init-file (or load-file-name (buffer-file-name)))
 (setq user-emacs-directory (file-name-directory user-init-file))
 
@@ -107,6 +109,24 @@
   (require-init 'init-linum-mode)
   (require-init 'init-git)
   (require-init 'init-gtags t)
+  (require-init 'init-gui t)
+  ;;
+  ;; google style
+  ;;
+  (require-init 'init-google-c-style)
+  ;; deadgrep 我用过的最好的 grep 前端
+  (require-init 'init-deadgrep t)
+  ;;
+  ;; 两个 ctags/gtags 神器
+  (require-init 'init-ggtags t)
+  (require-init 'init-citre t)
+  ;;
+  ;; flycheck
+  ;;
+  (require-init 'init-flycheck)
+  ;; lsp
+  ;;
+  (require-init 'init-lsp)
   (require-init 'init-clipboard)
   (require-init 'init-ctags t)
   (require-init 'init-gnus t)
@@ -114,7 +134,9 @@
   (require-init 'init-term-mode)
   (require-init 'init-web-mode t)
   (require-init 'init-company t)
-  (require-init 'init-chinese t) ;; cannot be idle-required
+  ;; 不使用 pyim 使用我最习惯的 rime
+  ;; (require-init 'init-chinese t) ;; cannot be idle-required
+  (require-init 'init-rime t)
   ;; need statistics of keyfreq asap
   (require-init 'init-keyfreq t)
   (require-init 'init-httpd t)
@@ -138,6 +160,9 @@
   (require-init 'init-hydra) ; hotkey is required everywhere
   ;; use evil mode (vi key binding)
   (require-init 'init-evil) ; init-evil dependent on init-clipboard
+
+  ;; (require-init 'init-eaf t)
+  (require-init 'init-privite-key) ; init-evil dependent on init-clipboard
 
   ;; ediff configuration should be last so it can override
   ;; the key bindings in previous configuration

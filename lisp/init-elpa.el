@@ -249,6 +249,11 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
 ;; Fire up package.el and ensure the following packages are installed.
 ;;------------------------------------------------------------------------------
 
+(require-package 'deadgrep)
+(require-package 'rime)
+(require-package 'ggtags)
+(require-package 'citre)
+(require-package 'flycheck)
 (require-package 'async)
 ; color-theme 6.6.1 in elpa is buggy
 (require-package 'amx)

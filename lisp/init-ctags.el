@@ -1178,4 +1178,10 @@
 (add-hook 'counsel-etags-after-update-tags-hook 'my-update-tags-file)
 ;; }}
 
+;;;
+;;; 非常重要, 保留时自动更新
+;;;
+(with-eval-after-load 'counsel-etags
+ (add-hook 'after-save-hook 'counsel-etags-update-tags-force))
+
 (provide 'init-ctags)

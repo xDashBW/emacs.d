@@ -95,6 +95,10 @@
 (defvar my-pdf-view-to-history nil
   "PDF view TO history which is List of (pdf-path . page-number).")
 
+;; 路径
+;; 设置多个分区，模块化
+(setq org-agenda-files '("~/bad-blood/" "~/bad-blood/代码训练/"))
+
 (with-eval-after-load 'org
   ;; {{
   (defvar my-org-src--saved-temp-window-config nil
@@ -221,7 +225,7 @@ ARG is ignored."
         ;; org-startup-indented t
         ;; {{ org 8.2.6 has some performance issue. Here is the workaround.
         ;; @see http://punchagan.muse-amuse.in/posts/how-i-learnt-to-use-emacs-profiler.html
-        org-agenda-inhibit-startup t ;; ~50x speedup
+        org-agenda-inhibit-startup t       ;; ~50x speedup
         org-agenda-use-tag-inheritance nil ;; 3-4x speedup
         ;; }}
         ;; org v8
@@ -229,7 +233,7 @@ ARG is ignored."
         org-tags-column 80
 
         ;; Refile targets include this file and any file contributing to the agenda - up to 5 levels deep
-        org-refile-targets '((nil :maxlevel . 5) (org-agenda-files :maxlevel . 5))
+        org-refile-targets '((nil :maxlevel . 50) (org-agenda-files :maxlevel . 50))
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
         org-todo-keywords (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")

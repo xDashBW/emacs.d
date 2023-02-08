@@ -282,7 +282,7 @@ COUNT, BEG, END, TYPE is used.  If INCLUSIVE is t, the text object is inclusive.
 ;; {{ https://github.com/syl20bnr/evil-escape
 (setq-default evil-escape-delay 0.3)
 (setq evil-escape-excluded-major-modes '(dired-mode))
-(setq-default evil-escape-key-sequence "kj")
+(setq-default evil-escape-key-sequence "jk")
 ;; disable evil-escape when input method is on
 (evil-escape-mode 1)
 ;; }}
@@ -346,7 +346,10 @@ COUNT, BEG, END, TYPE is used.  If INCLUSIVE is t, the text object is inclusive.
     (ffip-file-mode . emacs)
     (ivy-occur-grep-mode . normal)
     (messages-buffer-mode . normal)
-    (js2-error-buffer-mode . emacs))
+    (js2-error-buffer-mode . emacs)
+    (ggtags-global-mode)
+    (compilation-mode)
+    )
   "Default evil state per major mode.")
 ;; }}
 
@@ -592,7 +595,85 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
    (t
     (message "Can only beautify code written in python/javascript"))))
 
+;;;
+;;; 切换 buffer 的快捷键与 tab
+;;;
+
+;;; 切换 buffer
+(defun counsel-switch-buffer-other-tab ()
+  (interactive)
+  (tab-new)
+  (counsel-switch-buffer))
+
+(defun kill-tab-and-buffer ()
+  (interactive)
+  (kill-buffer)
+  (tab-bar-close-tab))
+
+(defun kill-tab-and-project-buffer ()
+  (interactive)
+  (project-kill-buffers)
+  (tab-bar-close-tab))
+
+(defun kill-other-window-buffer ()
+  (interactive)
+  (other-window 1)
+  (kill-this-buffer)
+  (other-window 1))
+
 (my-comma-leader-def
+  ;; 列出所有的需求
+  ;;
+  ;; P 前缀, 用来做 project 相关, 不是说 emacs 是基于 project, 而是因为 project 是更小的范围, 打开个 shell/eshell, 打开个目录, 切换 buffer, 基于 project 可以限定范围. 当然也有全局版的. 另外另一个好处是 project 前缀把相关的功能收录在一起, 方便你学习.
+  ;; P2 则是 project-other-window 的内置前缀键
+  ;; P3 则是 project-new-tab 的内置前缀键
+  ;; 本人用的最多的是 p3, 因为一般即时是同一个 project 也会基于 new-tab 打开以便布局更加清晰, 更何况打开一个 project.
+  "pk" 'project-kill-buffers
+  "pb" 'project-switch-to-buffer
+  "pf" 'project-find-file
+  "pc" 'project-compile
+  "pr" 'project-query-replace-regexp
+  "ps" 'project-shell
+  "pe" 'project-eshell
+  "pv" 'project-vc-dir
+  "p2" 'project-other-window-command
+  "p3" 'project-other-tab-command
+
+  ;;
+  ;; b 前缀
+  ;;
+  "b1" 'counsel-switch-buffer
+  "b2" 'counsel-switch-buffer-other-window
+  "b3" 'counsel-switch-buffer-other-tab
+  "b4" 'kill-tab-and-buffer
+  "b5" 'kill-tab-and-project-buffer
+
+  ;; q 前缀, 有大量空缺, 那就发扬下把,  用于代码的索引, 例如各种 grep 插件和 tags 插件
+  ;;
+  ;;
+  "qf" 'deadgrep
+  "qv" 'deadgrep-search-term
+  "qg" 'ggtags-grep
+  "qr" 'ggtags-find-reference
+  "qd" 'ggtags-find-definition
+  "qt" 'ggtags-find-tag-regexp
+  "qa" 'ggtags-find-tag-dwim
+  "qs" 'ggtags-find-other-symbol
+  "q1" 'ggtags-show-definition
+  "qe" 'citre-peek
+  ;;
+  ;; citre 用于简单预览, 其实我还是更喜好开个窗口显示结果.
+  ;;
+  ;; "pd" 'citre-peek
+  ;; "pc" 'citre-create-tags-file
+  ;; "pu" 'citre-update-this-tags-file
+  ;;
+  ;; flycheck
+  ;;
+  "c1" 'flycheck-list-errors
+  "c2" 'counsel-flycheck
+  ;;
+  ;;
   "," 'evilnc-comment-operator
   "/" 'my-toggle-input-method
   "bf" 'beginning-of-defun
@@ -602,11 +683,11 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "em" 'shellcop-erase-buffer
   "eb" 'eval-buffer
   "ee" 'eval-expression
-  "aa" 'copy-to-x-clipboard ; used frequently
+  "aa" 'copy-to-x-clipboard             ; used frequently
   "aw" 'ace-swap-window
   "af" 'ace-maximize-window
   "ac" 'aya-create
-  "pp" 'paste-from-x-clipboard ; used frequently
+  ;; "pp" 'paste-from-x-clipboard          ; used frequently
   "sb" 'my-current-string-beginning
   "se" 'my-current-string-end
   "vj" 'my-validate-json-or-js-expression
@@ -617,10 +698,14 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "xo" 'ace-window
   "ff" 'my-toggle-full-window ;; I use WIN+F in i3
   "ip" 'find-file-in-project
+  "xpb" 'project-switch-to-buffer
+  "xpp" 'project-switch-project
   "tt" 'find-file-in-current-directory
   "jj" 'find-file-in-project-at-point
-  "kk" 'find-file-in-project-by-selected
-  "kn" 'find-file-with-similar-name ; ffip v5.3.1
+  "jk" 'find-file-in-project-by-selected
+  "kk" 'kill-this-buffer
+  "ko" 'kill-other-window-buffer
+  "kn" 'find-file-with-similar-name     ; ffip v5.3.1
   "kd" 'find-directory-in-project-by-selected
   "kf" 'find-file
   "k/" 'find-file-other-window
@@ -641,6 +726,7 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "wl" 'evil-window-right
   "wk" 'evil-window-up
   "wj" 'evil-window-down
+  "fu" 'ggtags-find-reference
   ;; }}
   "rv" 'my-rename-thing-at-point
   "nm" 'js2hl-add-namespace-to-thing-at-point
@@ -648,12 +734,13 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "ts" 'evilmr-tag-selected-region ;; recommended
   "rt" 'counsel-etags-recent-tag
   "ft" 'counsel-etags-find-tag
+  "ut" 'counsel-etags-update-tags-force
   "yy" 'my-counsel-browse-kill-ring
-  "cf" 'counsel-grep ; grep current buffer
-  "gf" 'my-counsel-git-find-file ; find file
-  "gg" 'my-counsel-git-grep ; quickest grep should be easy to press
-  "gd" 'ffip-show-diff-by-description ;find-file-in-project 5.3.0+
-  "vv" 'my-evil-goto-definition ; frequently used
+  "cf" 'counsel-grep                    ; grep current buffer
+  "gf" 'my-counsel-git-find-file        ; find file
+  "gg" 'my-counsel-git-grep    ; quickest grep should be easy to press
+  "gd" 'ffip-show-diff-by-description   ;find-file-in-project 5.3.0+
+  "vv" 'my-evil-goto-definition         ; frequently used
   "sh" 'my-select-from-search-text-history
   "rjs" 'run-js
   "jsr" 'js-comint-send-region
@@ -667,14 +754,16 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "tm" 'my-git-timemachine
   ;; toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
   "op" 'my-compile
-  "c$" 'org-archive-subtree ; `C-c $'
+  "c$" 'org-archive-subtree             ; `C-c $'
   ;; org-do-demote/org-do-premote support selected region
-  "c<" 'org-do-promote ; `C-c C-<'
-  "c>" 'org-do-demote ; `C-c C->'
-  "cxi" 'org-clock-in ; `C-c C-x C-i'
-  "cxo" 'org-clock-out ; `C-c C-x C-o'
-  "cxr" 'org-clock-report ; `C-c C-x C-r'
+  "c<" 'org-do-promote                  ; `C-c C-<'
+  "c>" 'org-do-demote                   ; `C-c C->'
+  "cxt" 'org-todo                       ; `C-c C-x C-i'
+  "cxi" 'org-clock-in                   ; `C-c C-x C-i'
+  "cxo" 'org-clock-out                  ; `C-c C-x C-o'
+  "cxr" 'org-clock-report               ; `C-c C-x C-r'
   "qq" 'my-multi-purpose-grep
+  "qw" 'counsel-etags-list-tag-in-current-file
   "dd" 'counsel-etags-grep-current-directory
   "dc" 'my-grep-pinyin-in-current-directory
   "rr" 'my-counsel-recentf
@@ -690,6 +779,7 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "x1" 'delete-other-windows
   "x2" 'split-window-vertically
   "x3" 'split-window-horizontally
+  "x5" 'counsel-load-theme
   "xq" 'delete-window
   "xa" 'split-window-vertically
   "xd" 'split-window-horizontally
@@ -736,14 +826,17 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "4" 'winum-select-window-4
   "5" 'winum-select-window-5
   "6" 'winum-select-window-6
-  "7" 'winum-select-window-7
-  "8" 'winum-select-window-8
-  "9" 'winum-select-window-9
+  ;; "7" 'winum-select-window-7
+  ;; "8" 'winum-select-window-8
+  ;; "9" 'winum-select-window-9
   "xm" 'counsel-M-x
   "xx" 'er/expand-region
   "xf" 'find-file
   "x/" 'find-file-other-window
-  "xb" 'ivy-switch-buffer-by-pinyin
+  "xb" 'counsel-switch-buffer
+  "x4b" 'counsel-switch-buffer-other-window
+  "en" 'next-error
+  "ep" 'previous-error
   "xh" 'mark-whole-buffer
   "xk" 'kill-buffer
   "xs" 'save-buffer
@@ -751,18 +844,21 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "xz" 'my-switch-to-shell
   "vf" 'my-vc-rename-file-and-buffer
   "vc" 'my-vc-copy-file-and-rename-buffer
-  "xv" 'vc-next-action ; 'C-x v v' in original
+  "xv" 'vc-next-action                  ; 'C-x v v' in original
   "va" 'git-add-current-file
   "vk" 'git-checkout-current-file
-  "vg" 'vc-annotate ; 'C-x v g' in original
+  "vg" 'vc-annotate                     ; 'C-x v g' in original
   "vm" 'vc-msg-show
   "v=" 'git-gutter:popup-hunk
   "hh" 'cliphist-paste-item
   "yu" 'cliphist-select-item
-  "ih" 'my-git-goto-gutter ; use ivy-mode
+  "ih" 'my-git-goto-gutter              ; use ivy-mode
   "ir" 'ivy-resume
   "ww" 'my-narrow-or-widen-dwim
-  "wf" 'popup-which-function)
+  "cxc" 'org-ctrl-c-ctrl-c
+  "cxs" 'org-insert-structure-template
+  "wf" 'popup-which-function
+  )
 ;; }}
 
 ;; {{ Use `SPC` as leader key
@@ -770,6 +866,12 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
 (general-create-definer my-space-leader-def
   :prefix "SPC"
   :states '(normal visual))
+
+(defun save-and-compile ()
+  (interactive)
+  (lsp-format-buffer)
+  (save-buffer)
+  (project-compile))
 
 ;; Please check "init-ediff.el" which contains `my-space-leader-def' code too
 (my-space-leader-def
@@ -781,13 +883,15 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
         (interactive)
         (if (derived-mode-p 'diff-mode) (my-search-prev-diff-hunk)
           (my-search-prev-merge-conflict)))
+  "lf" 'lsp-format-buffer
+  "rr" 'save-and-compile
   "dd" 'pwd
   "mm" 'counsel-evil-goto-global-marker
   "mf" 'mark-defun
-  "xc" 'save-buffers-kill-terminal ; not used frequently
-  "ss" 'wg-create-workgroup ; save windows layout
+  "xc" 'save-buffers-kill-terminal      ; not used frequently
+  "ss" 'wg-create-workgroup             ; save windows layout
   "sc" 'shell-command
-  "ll" 'wg-open-workgroup ; load windows layout
+  "ll" 'wg-open-workgroup               ; load windows layout
 
   "jj" 'scroll-other-window
   "kk" 'scroll-other-window-up
@@ -1067,5 +1171,10 @@ I'm not sure this is good idea.")
   (when my-evil-enable-visual-update-x-selection
     (apply orig-func args)))
 (advice-add 'evil-visual-update-x-selection :around #'my-evil-visual-update-x-selection-hack)
+
+;;; 全局定义, 因为 C-g 实在是很难按
+(global-set-key (kbd "M-[") 'keyboard-quit)
+(global-set-key (kbd "M-[") 'minibuffer-keyboard-quit)
+
 
 (provide 'init-evil)
