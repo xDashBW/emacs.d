@@ -3,8 +3,9 @@
 
 
 ;;; 史上最好看的复古字体, GNU 经典
-(set-frame-font
- "-PfEd-Unifont Sample-normal-normal-normal-*-17-*-*-*-c-*-iso10646-1"
- )
+;;; 腻了
+;; (set-frame-font
+;;  "-PfEd-Unifont Sample-normal-normal-normal-*-17-*-*-*-c-*-iso10646-1"
+;;  )
 
 (provide 'init-gui)

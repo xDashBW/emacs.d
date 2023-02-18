@@ -159,7 +159,7 @@
 (setq package-archives
       '(
         ;; uncomment below line if you need use GNU ELPA
-        ;; ("gnu" . "https://elpa.gnu.org/packages/")
+        ("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
 
@@ -249,6 +249,10 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
 ;; Fire up package.el and ensure the following packages are installed.
 ;;------------------------------------------------------------------------------
 
+;;; Emacs 的战场, Letex
+(require-package 'auctex)                ; 经典永远不过时, 需要开启 elpa 仓库, 陈斌的配置默认没有开启
+(require-package 'cdlatex)              ; 更快的 auctex 实现
+;;;
 (require-package 'deadgrep)
 (require-package 'rime)
 (require-package 'ggtags)

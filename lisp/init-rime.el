@@ -1,7 +1,7 @@
 
 (setq default-input-method 'rime)
 
-(setq rime-user-data-dir "~/.myemacs.d/rime")
+(setq rime-user-data-dir "~/myrime_data/")
 
 ;; (setq rime-posframe-properties
 ;;       (list :background-color "#333333"
@@ -10,7 +10,7 @@
 ;;             :internal-border-width 10))
 
 (setq default-input-method "rime")
-;; (setq rime-show-candidate 'posframe)
+(setq rime-show-candidate 'posframe)
 
 (setq rime-disable-predicates '( ; 代码
                                 rime-predicate-prog-in-code-p

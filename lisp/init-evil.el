@@ -5,6 +5,7 @@
 ;; enable evil-mode
 (evil-mode 1)
 
+(setq evil-auto-indent 1)
 ;; Store more undo history to prevent loss of data
 (setq undo-limit 8000000
       undo-strong-limit 8000000
@@ -349,6 +350,7 @@ COUNT, BEG, END, TYPE is used.  If INCLUSIVE is t, the text object is inclusive.
     (js2-error-buffer-mode . emacs)
     (ggtags-global-mode)
     (compilation-mode)
+    (lsp-treemacs-generic-mode)
     )
   "Default evil state per major mode.")
 ;; }}
@@ -621,7 +623,18 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   (kill-this-buffer)
   (other-window 1))
 
+(defun newline-below ()
+  (interactive)
+  (evil-open-below 1)
+  (evil-force-normal-state))
+
+(defun newline-bove ()
+  (interactive)
+  (evil-open-above 1)
+  (evil-force-normal-state))
+
 (my-comma-leader-def
+  "wo" 'other-window
   ;; 列出所有的需求
   ;;
   ;; P 前缀, 用来做 project 相关, 不是说 emacs 是基于 project, 而是因为 project 是更小的范围, 打开个 shell/eshell, 打开个目录, 切换 buffer, 基于 project 可以限定范围. 当然也有全局版的. 另外另一个好处是 project 前缀把相关的功能收录在一起, 方便你学习.
@@ -873,6 +886,16 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   (save-buffer)
   (project-compile))
 
+(defun next-error-and-show-function ()
+  (interactive)
+  (next-error)
+  (popup-which-function))
+
+(defun prev-error-and-show-function ()
+  (interactive)
+  (previous-error)
+  (popup-which-function))
+
 ;; Please check "init-ediff.el" which contains `my-space-leader-def' code too
 (my-space-leader-def
   "n" (lambda ()
@@ -883,6 +906,15 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
         (interactive)
         (if (derived-mode-p 'diff-mode) (my-search-prev-diff-hunk)
           (my-search-prev-merge-conflict)))
+  ;;
+  ;; my vim function
+  "]" 'newline-below
+  "[" 'newline-bove
+  "9" 'next-error-and-show-function
+  "8" 'prev-error-and-show-function
+  "ee" 'youdao-dictionary-search-at-point
+  "er" 'youdao-dictionary-search-at-point+
+
   "lf" 'lsp-format-buffer
   "rr" 'save-and-compile
   "dd" 'pwd
@@ -1176,5 +1208,6 @@ I'm not sure this is good idea.")
 (global-set-key (kbd "M-[") 'keyboard-quit)
 (global-set-key (kbd "M-[") 'minibuffer-keyboard-quit)
 
+(global-set-key (kbd "C-u") 'evil-scroll-up)
 
 (provide 'init-evil)

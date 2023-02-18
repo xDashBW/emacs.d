@@ -66,7 +66,7 @@
 
 (defun org-mode-hook-setup ()
   (unless (my-buffer-file-temp-p)
-    (setq evil-auto-indent nil)
+    (setq evil-auto-indent t)
 
     ;; org-mime setup, run this command in org-file, than yank in `message-mode'
     (local-set-key (kbd "C-c M-o") 'org-mime-org-buffer-htmlize)
@@ -94,10 +94,6 @@
 
 (defvar my-pdf-view-to-history nil
   "PDF view TO history which is List of (pdf-path . page-number).")
-
-;; 路径
-;; 设置多个分区，模块化
-(setq org-agenda-files '("~/bad-blood/" "~/bad-blood/代码训练/"))
 
 (with-eval-after-load 'org
   ;; {{
@@ -191,9 +187,9 @@ ARG is ignored."
   ;; To install texlive-xetex:
   ;;    `sudo USE="cjk" emerge texlive-xetex` on Gentoo Linux
   (setq org-latex-pdf-process
-        '("xelatex -interaction nonstopmode -output-directory %o %f"
-          "xelatex -interaction nonstopmode -output-directory %o %f"
-          "xelatex -interaction nonstopmode -output-directory %o %f")) ;; org v8
+        '("pdflatex -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -interaction nonstopmode -output-directory %o %f")) ;; org v8
   ;; }}
 
   ;; {{ org-babel
@@ -231,12 +227,12 @@ ARG is ignored."
         ;; org v8
         org-odt-preferred-output-format "doc"
         org-tags-column 80
-
+        org-agenda-files '("~/io/" "~/io/read/" "~/io/write/")
         ;; Refile targets include this file and any file contributing to the agenda - up to 5 levels deep
         org-refile-targets '((nil :maxlevel . 50) (org-agenda-files :maxlevel . 50))
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
-        org-todo-keywords (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
+        org-todo-keywords (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)" "Complete(C@/!)" "Failed(F@/!)")
                                   (sequence "WAITING(w@/!)" "SOMEDAY(S)" "PROJECT(P@)" "|" "CANCELLED(c@/!)")))
         org-imenu-depth 9))
 
@@ -247,5 +243,10 @@ ARG is ignored."
                                              (:results . "drawer")))
   (setq sage-shell:input-history-cache-file "~/data/sage_history")
   (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view-mode))
+
+(defun org-show-todo-tree-without-timestamp ()
+  (interactive)
+  (org-match-sparse-tree t "+Deadline=\"\"+Scheduled=\"\"/!")
+  )
 
 (provide 'init-org)

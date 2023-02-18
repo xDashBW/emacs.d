@@ -7,7 +7,6 @@
 ;;; Python 等用不了 Ggtags
 (add-hook 'c-mode-hook 'ggtags-mode)
 (add-hook 'c++-mode-hook 'ggtags-mode)
-(add-hook 'ggtags-mode-hook 'ggtags-navigation-mode)
 
 ;;;
 ;;; 把 ggtags-mode 下的一些默认快捷键取消,
